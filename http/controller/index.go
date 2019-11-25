@@ -16,12 +16,14 @@ import (
 
 type IndexController struct{}
 
+// RegisterRoutes 注册路由
 func (i IndexController) RegisterRoutes(e *echo.Echo) {
 	e.GET("/", i.index)
 	e.GET("/solutions", i.solution)
 	e.GET("/learn", i.learn)
 	e.GET("/gopher", i.gopher)
 	e.GET("/about", i.about)
+	e.GET("/solutions/:typ", i.solutionProxy)
 }
 
 // index 首页
@@ -47,4 +49,10 @@ func (i IndexController) gopher(ctx echo.Context) error {
 // about 关于
 func (i IndexController) about(ctx echo.Context) error {
 	return Render(ctx, "about.html", map[string]interface{}{"about_active": "Header-menuItem--active"})
+}
+
+// solutionProxy  代理所有 solutions 子路由
+func (i IndexController) solutionProxy(ctx echo.Context) error {
+	typ := ctx.Param("typ")
+	return Render(ctx, "solutions/"+typ+".html", map[string]interface{}{"solution_active": "Header-menuItem--active"})
 }
